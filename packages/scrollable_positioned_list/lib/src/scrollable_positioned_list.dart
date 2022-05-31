@@ -255,7 +255,7 @@ class ItemScrollController {
     );
   }
 
-  void _attach(_ScrollablePositionedListState scrollableListState) {
+  void _attach(_ScrollablePositionedListState scrollableListState, _ListDisplayDetails primary, _ListDisplayDetails secondary) {
     assert(_scrollableListState == null &&
         primaryScrollController == null &&
         primaryScrollController == null);
