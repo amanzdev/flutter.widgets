@@ -183,6 +183,16 @@ class ItemScrollController {
   /// If `false`, then [jumpTo] and [scrollTo] must not be called.
   bool get isAttached => _scrollableListState != null;
 
+  /// Exposes [ScrollablePositionedList]'s Primary scroll controller
+  ///
+  /// If [isAttached]
+  ScrollController? primaryScrollController;
+
+  /// Exposes [ScrollablePositionedList]'s Secondary scroll controller
+  ///
+  /// If [isAttached]
+  ScrollController? secondaryScrollController;
+  
   _ScrollablePositionedListState? _scrollableListState;
 
   /// Immediately, without animation, reconfigure the list so that the item at
@@ -246,8 +256,12 @@ class ItemScrollController {
   }
 
   void _attach(_ScrollablePositionedListState scrollableListState) {
-    assert(_scrollableListState == null);
+    assert(_scrollableListState == null &&
+        primaryScrollController == null &&
+        primaryScrollController == null);
     _scrollableListState = scrollableListState;
+    primaryScrollController = primary.scrollController;
+    secondaryScrollController = secondary.scrollController;
   }
 
   void _detach() {
@@ -280,7 +294,7 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
     if (widget.itemCount > 0 && primary.target > widget.itemCount - 1) {
       primary.target = widget.itemCount - 1;
     }
-    widget.itemScrollController?._attach(this);
+    widget.itemScrollController?._attach(this, primary, secondary);
     primary.itemPositionsNotifier.itemPositions.addListener(_updatePositions);
     secondary.itemPositionsNotifier.itemPositions.addListener(_updatePositions);
   }
@@ -308,7 +322,7 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
     }
     if (widget.itemScrollController?._scrollableListState != this) {
       widget.itemScrollController?._detach();
-      widget.itemScrollController?._attach(this);
+      widget.itemScrollController?._attach(this, primary, secondary);
     }
 
     if (widget.itemCount == 0) {
