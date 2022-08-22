@@ -253,6 +253,20 @@ class ItemScrollController {
       opacityAnimationWeights: opacityAnimationWeights,
     );
   }
+  
+  Future<void> scrollToOffset({
+    required double offset,
+    required Duration duration,
+    Curve curve = Curves.linear,
+  }) {
+    assert(_scrollableListState != null);
+    assert(duration > Duration.zero);
+    return _scrollableListState!.primary.scrollController.animateTo(
+      offset,
+      duration: duration,
+      curve: curve,
+    );
+  }
 
   void _attach(_ScrollablePositionedListState scrollableListState) {
     _scrollableListState = scrollableListState;
